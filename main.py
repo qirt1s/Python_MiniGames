@@ -1,31 +1,75 @@
 import random
 
-secret_number = random.randint(1, 100)
-attempts = 0
-max_attempts = 10
+def initialize_data():
+    heroes = [
+        "смелый рыцарь",
+        "хитрый вор",
+        "волшебник",
+        "отважный пират",
+        "дерзкий исследователь"
+    ]
+    
+    places = [
+        "в далёком королевстве",
+        "на заброшенной фабрике",
+        "в густом лесу",
+        "на просторах космоса",
+        "у подножия гор"
+    ]
+    
+    events = [
+        "победил дракона",
+        "обнаружил сокровища",
+        "выиграл битву",
+        "устроил бал",
+        "раскрыл древнюю тайну"
+    ]
+    
+    details = [
+        "с волшебным мечом",
+        "на летающем ковре",
+        "под звуки волшебной музыки",
+        "с удивительной силой",
+        "в сопровождении магического существа"
+    ]
+    
+    return heroes, places, events, details
 
-print("Я загадал число от 1 до 100.")
-print("У вас есть 10 попыток.")
+def generate_story(heroes, places, events, details):
+    hero = random.choice(heroes)
+    place = random.choice(places)
+    event = random.choice(events)
+    detail = random.choice(details)
+    story = f"{hero} {place} {event} {detail}."
+    return story
 
-while attempts < max_attempts:
-        try:
-            guess = int(input("Введите ваше число: "))
-        except ValueError:
-            print("Пожалуйста, введите целое число!")
-            continue
+def save_story(story):
+    try:
+        with open("stories.txt", "a", encoding="utf-8") as file:
+            file.write(story + "\n")
+    except IOError:
+        print("Ошибка при сохранении истории!")
 
-        if guess < 1 or guess > 100:
-            print("Число должно быть от 1 до 100!")
-            continue
-
-        attempts += 1
-
-        if guess < secret_number:
-            print("Загаданное число больше.")
-        elif guess > secret_number:
-            print("Загаданное число меньше.")
-        else:
-            print(f"\nПоздравляем! Вы угадали число {secret_number} за {attempts} попыток!")
+def main():
+    heroes, places, events, details = initialize_data()
+    
+    while True:
+        input("\nНажмите Enter, чтобы сгенерировать новую историю...")
+        story = generate_story(heroes, places, events, details)
+        
+        print("\n=== НОВАЯ ИСТОРИЯ ===")
+        print(story)
+        print("=====================")
+        
+        save = input("\nХотите сохранить эту историю? (да/нет): ").strip().lower()
+        if save == 'да':
+            save_story(story)
+            print("История сохранена в файл stories.txt.")
+        
+        again = input("\nХотите сыграть ещё раз? (да/нет): ").strip().lower()
+        if again != 'да':
+            print("\nСпасибо за игру! До встречи!")
             break
-else:
-        print(f"\nВы не угадали. Загаданное число было {secret_number}.")
+
+if __name__ == "__main__":
+    main()
